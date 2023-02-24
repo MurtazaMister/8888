@@ -11,18 +11,18 @@ namespace _8888.Models
 
 
         [ForeignKey("TagId")]
-        public Tag Tag { get; set; }
-        public long TagId { get; set; }
+        public virtual Tag? Tag { get; set; }
+        public long? TagId { get; set; }
 
 
         [ForeignKey("UserId")]
-        public User User { get; set; }
-        public long UserId { get; set; }
+        public virtual User? User { get; set; }
+        public long? UserId { get; set; }
 
         public double TimeSpent { get; set; }
 
 
         [DataType(DataType.Date)]
-        public DateTime Today { get; set; }
+        public DateTime Date { get; set; }
     }
 }

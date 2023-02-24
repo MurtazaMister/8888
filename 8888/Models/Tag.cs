@@ -9,11 +9,11 @@ namespace _8888.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Required]
-        public string Color { get; set; }
+        public string? Color { get; set; }
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public virtual User? User { get; set; }
         public long UserId { get; set; }
     }
 }

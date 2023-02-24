@@ -10,9 +10,9 @@ namespace _8888.Models
         public long Id { get; set; }
 
         [ForeignKey("SessionId")]
-        public Session Session { get; set; }
+        public virtual Session? Session { get; set; }
         public long SessionId { get; set; }
 
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
     }
 }

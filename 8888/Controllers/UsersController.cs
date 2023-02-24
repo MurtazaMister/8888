@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _8888.Models;
+using AutoMapper;
 
 namespace _8888.Controllers
 {
@@ -14,23 +15,34 @@ namespace _8888.Controllers
     public class UsersController : ControllerBase
     {
         private readonly EntityContext _context;
+        private readonly IMapper _mapper;
 
-        public UsersController(EntityContext context)
+        public UsersController(EntityContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            if(_context.Users == null)
+            {
+                return NotFound();
+            }
+            var res = await _context.Users.ToListAsync();
+            return Ok(_mapper.Map<List<UserDTO>>(res));
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(long id)
         {
+            if (_context.Users == null)
+            {
+                return NotFound();
+            }
             var user = await _context.Users.FindAsync(id);
 
             if (user == null)
@@ -38,20 +50,24 @@ namespace _8888.Controllers
                 return NotFound();
             }
 
-            return user;
+            return Ok(_mapper.Map<UserDTO>(user));
         }
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(long id, User user)
+        public async Task<IActionResult> PutUser(long id, UserDTO userDTO)
         {
-            if (id != user.Id)
+            if (id != userDTO.Id)
             {
                 return BadRequest();
             }
-
-            _context.Entry(user).State = EntityState.Modified;
+            var user = await _context.Users.FindAsync(id);
+            if(user == null)
+            {
+                return NotFound();
+            }
+            _mapper.Map<UserDTO, User>(userDTO, user);
 
             try
             {
@@ -80,7 +96,7 @@ namespace _8888.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return CreatedAtAction("GetUser", new { id = user.Id }, _mapper.Map<UserDTO>(user));
         }
 
         // DELETE: api/Users/5
