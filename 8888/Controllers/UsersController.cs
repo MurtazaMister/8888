@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using _8888.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 
 namespace _8888.Controllers
 {
@@ -90,13 +91,37 @@ namespace _8888.Controllers
 
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("")]
         public async Task<ActionResult<User>> PostUser(User user)
         {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.Id }, _mapper.Map<UserDTO>(user));
+        }
+
+        // POST: api/Users
+        // To accept username and password, and compare with users in the database
+        [HttpPost("Verify/{username}")]
+        public async Task<ActionResult<User>> CheckUser(String username, [FromBody] String password)
+        {
+
+            var users = await _context.Users.ToListAsync();
+            User? finaluser = null;
+            foreach (User user in users)
+            {
+                if(user.UserName == username && user.Password == password)
+                {
+                    finaluser = user;
+                    break;
+                }
+            }
+            if (finaluser == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<UserDTO>(finaluser));
         }
 
         // DELETE: api/Users/5
