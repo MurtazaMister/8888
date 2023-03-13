@@ -11,7 +11,7 @@ namespace _8888.Models
 
         [ForeignKey("SessionId")]
         public virtual Session? Session { get; set; }
-        public long SessionId { get; set; }
+        public long? SessionId { get; set; }
 
         public string? Comment { get; set; }
     }

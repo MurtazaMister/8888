@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _8888.Models;
 
@@ -11,9 +12,11 @@ using _8888.Models;
 namespace _8888.Migrations
 {
     [DbContext(typeof(EntityContext))]
-    partial class EntityContextModelSnapshot : ModelSnapshot
+    [Migration("20230312201110_making-somethng-options")]
+    partial class makingsomethngoptions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

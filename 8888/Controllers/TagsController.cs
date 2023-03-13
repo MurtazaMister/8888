@@ -29,16 +29,25 @@ namespace _8888.Controllers
 
         // GET: api/Tags/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tag>> GetTag(long id)
+        public async Task<ActionResult<IEnumerable<Tag>>> GetTag(long id)
         {
-            var tag = await _context.Tags.FindAsync(id);
+            var tags = await _context.Tags.ToListAsync();
+            var tagList = new List<Tag>();
 
-            if (tag == null)
+            if (tags == null)
             {
                 return NotFound();
             }
 
-            return tag;
+            foreach (var tag in tags)
+            {
+                if(tag.UserId == id)
+                {
+                    tagList.Add(tag);
+                }
+            }
+
+            return tagList;
         }
 
         // PUT: api/Tags/5
