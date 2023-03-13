@@ -28,17 +28,28 @@ namespace _8888.Controllers
         }
 
         // GET: api/Sessions/5
+        // {id} - User ID
+        // Get all the sessions of a particular user
         [HttpGet("{id}")]
-        public async Task<ActionResult<Session>> GetSession(long id)
+        public async Task<ActionResult<IEnumerable<Session>>> GetSession(long id)
         {
-            var session = await _context.Sessions.FindAsync(id);
+            var sessions = await _context.Sessions.ToListAsync();
+            var sessionList = new List<Session>();
 
-            if (session == null)
+            if (sessions == null)
             {
                 return NotFound();
             }
 
-            return session;
+            foreach (var session in sessions)
+            {
+                if(session.UserId == id)
+                {
+                    sessionList.Add(session);
+                }
+            }
+
+            return sessionList;
         }
 
         // PUT: api/Sessions/5
